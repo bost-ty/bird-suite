@@ -8,7 +8,6 @@
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css" />
 		<link rel="stylesheet" href="main.css" />
-		<script src="main.js" defer></script>
 	</head>
 	<body>
 		<header>
@@ -16,16 +15,19 @@
 				<h1>Twitcher Suite</h1>
 				<p>Twitch tools for Butcher Bird</p>
 			</hgroup>
+			<button id="ctrl-hide">Only show controls</button>
 		</header>
 		<main>
 			<section id="authorizeSection">
-				<p>
-					To continue, authorize this application on Twitch. Make sure you're
-					logged in to the correct account!
-				</p>
+				<div class="divider"></div>
 				<button id="authorizeButton">Authorize on Twitch</button>
 			</section>
 			<section id="callbackSection"></section>
+			<div class="divider"></div>
+			<section id="controlsSection">
+				<div class="flex"></div>
+			</section>
 		</main>
+		<script src="main.js"></script>
 	</body>
 </html>
