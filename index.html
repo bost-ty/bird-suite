@@ -21,6 +21,7 @@
 		</header>
 		<main>
 			<section id="authorizeSection">
+				<div id="authInfo"></div>
 				<div class="divider"></div>
 				<button id="authorizeButton">Authorize on Twitch</button>
 			</section>
@@ -42,13 +43,6 @@
 					</label>
 					<button id="connectButton">Connect to target channel</button>
 				</div>
-				<div class="flex">
-					<label>
-						Event name
-						<input type="text" name="event" id="eventInput" />
-					</label>
-					<button id="markButton">Mark event at current time</button>
-				</div>
 			</section>
 			<section id="outputSection">
 				<div class="flex">
@@ -61,14 +55,20 @@
 						<input type="text" name="chatters" id="chatters" readonly />
 					</label>
 				</div>
-
 				<div class="divider"></div>
-				<div>
-					<h2>Event Log</h2>
-					<div
-						id="eventOutput"
-						style="color: var(--code); font-family: monospace"></div>
+			</section>
+			<section id="eventSection">
+				<h2>Event Log</h2>
+				<div class="flex">
+					<label>
+						Event name
+						<input type="text" name="event" id="eventInput" />
+					</label>
+					<button id="markButton">Mark event at current time</button>
 				</div>
+				<div
+					id="eventOutput"
+					style="color: var(--code); font-family: monospace"></div>
 			</section>
 		</main>
 		<script src="main.js" type="module"></script>
