@@ -15,19 +15,62 @@
 				<h1>Twitcher Suite</h1>
 				<p>Twitch tools for Butcher Bird</p>
 			</hgroup>
-			<button id="ctrl-hide">Only show controls</button>
+			<button id="ctrl-hide">Hide auth information</button>
+			<button id="ctrl-clear">Clear event/timestamp data</button>
+			<button id="ctrl-clear-channel">Clear channel connection</button>
 		</header>
 		<main>
 			<section id="authorizeSection">
 				<div class="divider"></div>
 				<button id="authorizeButton">Authorize on Twitch</button>
 			</section>
-			<section id="callbackSection"></section>
+			<section
+				id="callbackSection"
+				style="color: var(--code); font-family: monospace"></section>
 			<div class="divider"></div>
+			<label>
+				Output filename
+				<input type="text" name="eventsTitle" id="eventsTitle" />
+			</label>
+			<button id="downloadButton">Download output as .csv</button>
 			<section id="controlsSection">
-				<div class="flex"></div>
+				<div class="divider"></div>
+				<div class="flex">
+					<label>
+						Target channel username
+						<input type="text" name="username" id="usernameInput" />
+					</label>
+					<button id="connectButton">Connect to target channel</button>
+				</div>
+				<div class="flex">
+					<label>
+						Event name
+						<input type="text" name="event" id="eventInput" />
+					</label>
+					<button id="markButton">Mark event at current time</button>
+				</div>
+			</section>
+			<section id="outputSection">
+				<div class="flex">
+					<label>
+						Viewers
+						<input type="text" name="viewers" id="viewers" readonly />
+					</label>
+					<label>
+						Chatters
+						<input type="text" name="chatters" id="chatters" readonly />
+					</label>
+				</div>
+
+				<div class="divider"></div>
+				<div>
+					<h2>Event Log</h2>
+					<div
+						id="eventOutput"
+						style="color: var(--code); font-family: monospace"></div>
+				</div>
 			</section>
 		</main>
-		<script src="main.js"></script>
+		<script src="main.js" type="module"></script>
 	</body>
 </html>
