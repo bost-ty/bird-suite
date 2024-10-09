@@ -1,7 +1,7 @@
 "use strict";
 
 import { makeConfig, generateCsv, downloadCsv } from "./csv.js";
-import { renderURLSearchParamsAsUL, toggleVisibility } from "./render.js";
+import { renderEvents, renderURLSearchParamsAsUL, toggleVisibility } from "./render.js";
 import {
 	validateAuth,
 	fetchTwitch,
@@ -27,11 +27,13 @@ const eventInput = document.getElementById("eventInput");
 const markButton = document.getElementById("markButton");
 const eventOutput = document.getElementById("eventOutput");
 
+// Disable initial controls
 usernameInput.disabled = true;
 eventInput.disabled = true;
 connectButton.disabled = true;
 markButton.disabled = true;
 
+// Render any existing events
 const rerender = () => renderEvents(eventOutput, events);
 if (events.length > 0) rerender();
 
@@ -111,14 +113,10 @@ markButton.disabled = false;
 const bearer = `Bearer ${sp.get("#access_token")}`;
 const headers = { Authorization: bearer, "Client-Id": CLIENT_ID };
 
-let clientName, clientId, revalidationTimeout;
-({ clientName, clientId, revalidationTimeout } = validateAuth(
-	revalidationTimeout,
-	bearer
-));
-callbackSection.append(`Authenticated as: ${clientName} (${clientId})`);
+let clientName, clientId, rvTo;
+({ clientName, clientId, rvTo } = await validateAuth(rvTo, bearer));
 const oneHourMs = 1000 * 60 * 60;
-revalidationTimeout = setTimeout(validateAuth, oneHourMs);
+rvTo = setTimeout(validateAuth, oneHourMs);
 console.log(`Revalidation set for ${new Date(Date.now() + oneHourMs)}`);
 
 const renderedUL = renderURLSearchParamsAsUL(callbackSection, sp, [
@@ -127,15 +125,19 @@ const renderedUL = renderURLSearchParamsAsUL(callbackSection, sp, [
 	"state",
 	"token_type",
 ]);
+callbackSection.append(`Authenticated as: ${clientName} (${clientId})`);
 
 connectButton.addEventListener("click", async () => {
 	// Get username from page
 	const username = usernameInput.value || prompt("Please enter a username:");
-	// Make request to Twitch
-	const bcId = getUserId(username, headers);
-	if (!bcId) {
-		throw new Error("Couldn't get userId!");
+	if (!username) {
+		alert("You must enter a username!");
+		return;
 	}
+	// Get user id
+	const bcId = await getUserId(username, headers);
+	if (!bcId) throw new Error("Couldn't get userId!");
+	//
 	try {
 		viewersInput.value = await getViewerCount(bcId, headers);
 		const viewersInterval = setInterval(async () => {
@@ -168,11 +170,7 @@ eventInput.addEventListener("keydown", (e) => {
  * @param {number} time Date.now() please!
  */
 function updateEvents(events, eventName, channel, time = Date.now()) {
-	events.push({
-		time,
-		channel,
-		eventName,
-	});
+	events.push({ time, channel, eventName });
 	localStorage.setItem(EVENT_STORE, JSON.stringify(events));
 }
 
@@ -197,13 +195,14 @@ downloadButton.addEventListener("click", () => {
 		useKeysAsHeaders: true,
 		filename: `${title}_${d}`,
 		title: `${title}_${d}`,
-		showTitle: true,
+		showTitle: false,
 		useBom: true,
 	});
-	if (events) {
+	if (events && events[0]) {
 		const csv = generateCsv(csvConfig)(events);
 		downloadCsv(csvConfig)(csv);
 	} else {
-		console.error("No events found, didn't download");
+		alert("No events found, not downloading.");
+		console.error("No events found, not downloading.");
 	}
 });

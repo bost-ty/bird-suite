@@ -26,7 +26,7 @@ async function validateAuth(revalidationTimeout, bearer) {
 }
 
 /**
- * fetchTwitch
+ * fetchTwitch (not used)
  * @param {string} endpoint Twitch Helix API endpoint path (`users`, `streams`, `chat/chatters`)
  * @param {[{ q: string, v: string | number }]} parameters Query parameters to add and their values
  * @param { string } target Field from Twitch's response to return

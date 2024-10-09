@@ -25,15 +25,13 @@
 				<div class="divider"></div>
 				<button id="authorizeButton">Authorize on Twitch</button>
 			</section>
-			<section
-				id="callbackSection"
-				style="color: var(--code); font-family: monospace"></section>
+			<section id="callbackSection" class="mono"></section>
 			<div class="divider"></div>
 			<label>
 				Output filename
 				<input type="text" name="eventsTitle" id="eventsTitle" />
 			</label>
-			<button id="downloadButton">Download output as .csv</button>
+			<button id="downloadButton">Download event log as .csv</button>
 			<section id="controlsSection">
 				<div class="divider"></div>
 				<div class="flex">
@@ -68,7 +66,8 @@
 				</div>
 				<div
 					id="eventOutput"
-					style="color: var(--code); font-family: monospace"></div>
+					class="mono"
+				</div>
 			</section>
 		</main>
 		<script src="./src/main.js" type="module"></script>
