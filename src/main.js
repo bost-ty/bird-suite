@@ -15,7 +15,6 @@ const REDIRECT_URI = "http://localhost:5500";
 const EVENT_STORE = `events_${CLIENT_ID}`;
 const STATE_STORE = `oauth_state_${CLIENT_ID}`;
 const SCOPES = ["moderator:read:chatters"];
-const HELIX = "https://api.twitch.tv/helix";
 
 let events = JSON.parse(localStorage.getItem(EVENT_STORE)) || [];
 
@@ -70,17 +69,13 @@ clearChannelBtn.addEventListener("click", () => {
 });
 
 authorizeButton?.addEventListener("click", () => {
-	const responseType = "token";
-	const forceVerify = true;
+	const type = "token";
+	const reverify = true;
 	const scopes = SCOPES.map((scope) => encodeURIComponent(scope)).join("+");
 	const state = window.btoa(new Date().toISOString());
-	const parameters = `response_type=${responseType}
-						&client_id=${CLIENT_ID}
-						&force_verify=${forceVerify}
-						&redirect_uri=${REDIRECT_URI}
-						&scope=${scopes}
-						&state=${state}`;
 	localStorage.setItem(STATE_STORE, state);
+	const parameters = `response_type=${type}&client_id=${CLIENT_ID}&force_verify=${reverify} \
+	&redirect_uri=${REDIRECT_URI}&scope=${scopes}&state=${state}`;
 	const url = `https://id.twitch.tv/oauth2/authorize?${parameters}`;
 	location.assign(url);
 });
@@ -116,10 +111,15 @@ markButton.disabled = false;
 const bearer = `Bearer ${sp.get("#access_token")}`;
 const headers = { Authorization: bearer, "Client-Id": CLIENT_ID };
 
-let revalidationTimeout;
-let clientUsername = "",
-	clientUserId = "";
-validateAuth(revalidationTimeout);
+let clientName, clientId, revalidationTimeout;
+({ clientName, clientId, revalidationTimeout } = validateAuth(
+	revalidationTimeout,
+	bearer
+));
+callbackSection.append(`Authenticated as: ${clientName} (${clientId})`);
+const oneHourMs = 1000 * 60 * 60;
+revalidationTimeout = setTimeout(validateAuth, oneHourMs);
+console.log(`Revalidation set for ${new Date(Date.now() + oneHourMs)}`);
 
 const renderedUL = renderURLSearchParamsAsUL(callbackSection, sp, [
 	"#access_token",
@@ -130,24 +130,24 @@ const renderedUL = renderURLSearchParamsAsUL(callbackSection, sp, [
 
 connectButton.addEventListener("click", async () => {
 	// Get username from page
-	const username = usernameInput.value;
+	const username = usernameInput.value || prompt("Please enter a username:");
 	// Make request to Twitch
-	const userId = await getUserId(username, headers);
-	if (!userId) {
+	const bcId = getUserId(username, headers);
+	if (!bcId) {
 		throw new Error("Couldn't get userId!");
 	}
 	try {
-		viewersInput.value = await getViewerCount(userId, headers);
+		viewersInput.value = await getViewerCount(bcId, headers);
 		const viewersInterval = setInterval(async () => {
 			console.log("updating viewers...");
-			viewersInput.value = await getViewerCount(userId, headers);
+			viewersInput.value = await getViewerCount(bcId, headers);
 		}, 1000 * 30);
-		chattersInput.value = await getChatterCount(userId, clientUserId, headers);
+		chattersInput.value = await getChatterCount(bcId, clientId, headers);
 		const chattersInterval = setInterval(async () => {
 			console.log("updating chatters...");
-			chattersInput.value = await getChatterCount(userId, clientUserId, headers);
+			chattersInput.value = await getChatterCount(bcId, clientId, headers);
 		}, 1000 * 30);
-		connectButton.innerText = `Connected to ${username} (${userId})`;
+		connectButton.innerText = `Connected to ${username} (${bcId})`;
 		connectButton.disabled = true;
 		usernameInput.disabled = true;
 	} catch (error) {

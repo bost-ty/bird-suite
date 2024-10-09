@@ -1,38 +1,44 @@
+const HELIX = "https://api.twitch.tv/helix";
+const ID = "https://id.twitch.tv/oauth2";
+
 /**
+ * validateAuth
+ * @param {number} revalidationTimeout
+ * @param {string} bearer
  * @returns { { clientUsername: string, clientUserId: string, revalidationTimeout: number } } Validation data object
  */
-async function validateAuth(revalidationTimeout) {
-	const validAuth = await fetch("https://id.twitch.tv/oauth2/validate", {
+async function validateAuth(revalidationTimeout, bearer) {
+	const validAuth = await fetch(`${ID}/validate`, {
 		headers: { Authorization: bearer },
 	});
-	if (validAuth["ok"]) {
-		console.log("Validation OK!");
-		authorizeButton.innerText = "Reauthorize on Twitch";
-		const { login, user_id } = await validAuth.json();
-		callbackSection.append(`Authenticated as: ${login} (${user_id})`);
-		const oneHourMs = 1000 * 60 * 60;
-		revalidationTimeout = setTimeout(validateAuth, oneHourMs);
-		console.log(`Revalidation set for ${new Date(Date.now() + oneHourMs)}`);
-		let v = { login, user_id, revalidationTimeout };
-		return v;
-	} else {
+	if (!validAuth["ok"]) {
 		if (revalidationTimeout) clearTimeout(revalidationTimeout);
-		throw new Error(
-			"Failed to validate authorization on Twitch. Please reauthenticate!"
-		);
+		throw new Error("Validation failed; please reauthorize on Twitch!");
 	}
+	console.log("Validation OK!");
+	authorizeButton.innerText = "Reauthorize on Twitch";
+	const { login, user_id } = await validAuth.json();
+	if (!login || !user_id) {
+		throw new Error("Couldn't get json from validAuth");
+	}
+	let v = { clientName: login, clientId: user_id, revalidationTimeout };
+	return v;
 }
 
 /**
- *
- * @param {string} endpoint endpoint (`users`, `streams`, `chat/chatters`)
- * @param {{ q: string, p: string | number }} parameters which parameters to add & their values
- * @param { string } target the field we want from the result
- * @param { { Authorization: string, Client-Id: string }} headers headers for fetch()
- * @returns { {} } result
+ * fetchTwitch
+ * @param {string} endpoint Twitch Helix API endpoint path (`users`, `streams`, `chat/chatters`)
+ * @param {[{ q: string, v: string | number }]} parameters Query parameters to add and their values
+ * @param { string } target Field from Twitch's response to return
+ * @param {{ Authorization: string, 'Client-Id': string }} headers Auth headers for fetch()
+ * @returns { Promise<string | number> } result Result
  */
 async function fetchTwitch(endpoint, parameters, target, headers) {
-	const url = HELIX + "/" + endpoint + "?" + parameters.q + "=" + parameters.p;
+	const p = parameters
+		.map((x) => Object.values(x))
+		.map((y) => y.join("="))
+		.join("&");
+	const url = `${HELIX}/${endpoint}?${p}`;
 	const r = await fetch(url, { headers });
 	if (!r.ok) {
 		throw new Error(`Fetch error for ${endpoint} (${parameters}, ${headers})`);
@@ -44,63 +50,51 @@ async function fetchTwitch(endpoint, parameters, target, headers) {
 	return data[0][target];
 }
 
-// const userId = await fetchTwitch("users", { q: "login", p: liveUsername }, "id", headers);
+// const userId = await fetchTwitch("users", [{ q: "login", p: liveUsername }], "id", headers);
 
 /**
- *
- * @param { string } liveUsername Target channel username
+ * getUserId
+ * @param { string } bcName Target channel username
  * @param { object } headers
- * @returns { string } userId
+ * @returns { Promise<string> } userId
  */
-async function getUserId(liveUsername, headers) {
-	const r = await fetch(`${HELIX}/users?login=${liveUsername}`, { headers });
-	if (!r.ok) {
-		throw new Error(
-			`Error: couldn't getUserId for ${liveUsername} (${r.status}) ${r.message}`
-		);
-	}
+async function getUserId(bcName, headers) {
+	if (!bcName) throw new Error("No bcName provided");
+	const r = await fetch(`${HELIX}/users?login=${bcName}`, { headers });
+	if (!r.ok) throw new Error(`Failed getUserId for ${bcName} (${r.status})`);
 	const { data } = await r.json();
-	if (!data || !data[0]) {
-		throw new Error(`Error: couldn't access data[0].id for ${liveUsername}`);
-	}
+	if (!data[0]) throw new Error(`Failed data[0]["id"] for ${bcName}`);
 	return data[0]["id"];
 }
 
 /**
- *
- * @param {string} liveUserId
+ * getViewerCount
+ * @param {string} bcId
  * @param { object } headers
- * @returns { number } viewerCount
+ * @returns { Promise<number> } viewerCount
  */
-async function getViewerCount(liveUserId, headers) {
-	const r = await fetch(`${HELIX}/streams?user_id=${liveUserId}`, {
-		headers,
-	});
+async function getViewerCount(bcId, headers) {
+	if (!bcId || bcId === "") throw new Error("No bcId provided");
+	const url = `${HELIX}/streams?user_id=${bcId}`;
+	const r = await fetch(url, { headers });
 	const { data } = await r.json();
-	if (!data || !data[0]) {
-		throw new Error(`No viewer count data for ${liveUserId}`);
-	}
+	if (!data[0]["viewer_count"]) throw new Error(`No viewer count data for ${bcId}`);
 	return data[0]["viewer_count"];
 }
 
 /**
- *
- * @param {string} liveUserId
- * @param {string} modUserId
+ * getChatterCount
+ * @param {string} bcId
+ * @param {string} modId
  * @param {object} headers
- * @returns { number } chatterCount
+ * @returns { Promise<number> } chatterCount
  */
-async function getChatterCount(liveUserId, modUserId, headers) {
-	const r = await fetch(
-		`${HELIX}/chat/chatters?broadcaster_id=${liveUserId}&moderator_id=${modUserId}`,
-		{
-			headers,
-		}
-	);
+async function getChatterCount(bcId, modId, headers) {
+	if (!bcId || bcId === "") throw new Error("bcId not provided");
+	const url = `${HELIX}/chat/chatters?broadcaster_id=${bcId}&moderator_id=${modId}`;
+	const r = await fetch(url, { headers });
 	const json = await r.json();
-	if (!json || !json["total"]) {
-		throw new Error(`No chatter count data for ${liveUserId}`);
-	}
+	if (!json["total"]) throw new Error(`No chatter count data for ${bcId}`);
 	return json["total"];
 }
 
