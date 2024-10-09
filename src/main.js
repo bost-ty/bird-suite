@@ -1,14 +1,14 @@
 "use strict";
 
-import { makeConfig, generateCsv, downloadCsv } from "./src/csv.js";
-import { renderURLSearchParamsAsUL, toggleVisibility } from "./src/render.js";
+import { makeConfig, generateCsv, downloadCsv } from "./csv.js";
+import { renderURLSearchParamsAsUL, toggleVisibility } from "./render.js";
 import {
 	validateAuth,
 	fetchTwitch,
 	getChatterCount,
 	getViewerCount,
 	getUserId,
-} from "./src/twitch.js";
+} from "./twitch.js";
 
 const CLIENT_ID = "p1qg8d7u9wf5580xqwuu3ot0yk69nx";
 const REDIRECT_URI = "http://localhost:5500";
