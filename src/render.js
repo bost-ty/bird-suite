@@ -4,16 +4,16 @@
  * @param {{ time: Number , data: String}} events
  */
 function renderEvents(parent, events) {
-	console.log("RENDER EVENTS", events.length, events.at(-1));
 	if (events.length === 0) {
 		parent.innerHTML = "";
 		return;
 	}
+	console.log("RENDER EVENTS", events.length, events.at(-1));
 	while (parent.children.length > events.length) {
 		parent.lastChild.remove();
 	}
 	events.forEach((eventObject, index) => {
-		const { time, channel, eventName } = eventObject;
+		const { time, channel, eventName, eventData } = eventObject;
 		let element;
 		if (index < parent.children.length) {
 			element = parent.children[index];
@@ -21,9 +21,9 @@ function renderEvents(parent, events) {
 			element = document.createElement("p");
 			parent.appendChild(element);
 		}
-		element.innerHTML = `[${channel}] ${new Date(
-			time
-		).toLocaleTimeString()}: ${eventName}`;
+		element.innerHTML = `
+		[${channel}] ${new Date(time).toLocaleTimeString()}: 
+		${eventName} - ${eventData}`;
 	});
 	parent.scrollTo(0, parent.scrollHeight);
 }
