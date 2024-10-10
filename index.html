@@ -3,10 +3,8 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>twitcher suite</title>
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css" />
+		<title>Bird Suite</title>
+		<link rel="stylesheet" href="water.css" />
 		<link rel="stylesheet" href="main.css" />
 	</head>
 	<body>
@@ -27,13 +25,7 @@
 			</section>
 			<section id="callbackSection" class="mono"></section>
 			<div class="divider"></div>
-			<label>
-				Output filename
-				<input type="text" name="eventsTitle" id="eventsTitle" />
-			</label>
-			<button id="downloadButton">Download event log as .csv</button>
 			<section id="controlsSection">
-				<div class="divider"></div>
 				<div class="flex">
 					<label>
 						Target channel username
@@ -53,10 +45,19 @@
 						<input type="text" name="chatters" id="chatters" readonly />
 					</label>
 				</div>
+				<label>
+					Output filename
+					<input type="text" name="eventsTitle" id="eventsTitle" />
+				</label>
+				<button id="downloadButton">Download event log as .csv</button>
 				<div class="divider"></div>
 			</section>
 			<section id="eventSection">
 				<h2>Event Log</h2>
+				<label>
+					Render stats updates as they happen?
+					<input type="checkbox" name="renderCounts" id="renderCounts">
+				</label>
 				<div class="flex">
 					<label>
 						Event name
