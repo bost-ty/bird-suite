@@ -136,27 +136,29 @@ connectButton.addEventListener("click", async () => {
 	}
 	// Get user id
 	const bcId = await getUserId(username, headers);
-	if (!bcId) throw new Error("Couldn't get userId!");
-	//
-	try {
-		viewersInput.value = await getViewerCount(bcId, headers);
-		const viewersInterval = setInterval(async () => {
-			console.log("updating viewers...");
-			viewersInput.value = await getViewerCount(bcId, headers);
-		}, 1000 * 30);
-		chattersInput.value = await getChatterCount(bcId, clientId, headers);
-		const chattersInterval = setInterval(async () => {
-			console.log("updating chatters...");
-			chattersInput.value = await getChatterCount(bcId, clientId, headers);
-		}, 1000 * 30);
-		connectButton.innerText = `Connected to ${username} (${bcId})`;
-		connectButton.disabled = true;
-		usernameInput.disabled = true;
-	} catch (error) {
-		connectButton.innerText = error;
-		console.warn(error);
+	if (!bcId) {
+		connectButton.innerText = `Couldn't connect to ${username}`;
+		throw new Error("Couldn't get userId!");
 	}
+	connectButton.innerText = `Connected to ${username} (${bcId})`;
+	connectButton.disabled = true;
+	usernameInput.disabled = true;
+	let statsTimeout = await statsUpdater(bcId, clientId, username);
 });
+
+async function statsUpdater(bcId, clientId, username) {
+	const doRenderStats = document.getElementById("renderCounts").checked;
+	let viewers = await getViewerCount(bcId, headers);
+	let chatters = await getChatterCount(bcId, clientId, headers);
+	if (!viewers || !chatters) throw new Error("Couldn't get viewers/chatters");
+	updateEvents(events, "Viewers", viewers, username);
+	updateEvents(events, "Chatters", chatters, username);
+	viewersInput.value = viewers;
+	chattersInput.value = chatters;
+	console.log(doRenderStats);
+	if (doRenderStats) rerender();
+	return setTimeout(statsUpdater, 30 * 1000, bcId, clientId, username);
+}
 
 eventInput.addEventListener("keydown", (e) => {
 	if (e.key === "Enter") markButton.click();
@@ -166,19 +168,19 @@ eventInput.addEventListener("keydown", (e) => {
  *
  * @param {Object[]} events the global events array
  * @param {string} eventName
+ * @param {string} eventData
  * @param {string} channel
  * @param {number} time Date.now() please!
  */
-function updateEvents(events, eventName, channel, time = Date.now()) {
-	events.push({ time, channel, eventName });
+function updateEvents(events, eventName, eventData, channel, time = Date.now()) {
+	events.push({ time, channel, eventName, eventData });
 	localStorage.setItem(EVENT_STORE, JSON.stringify(events));
 }
 
 markButton.addEventListener("click", () => {
-	const channel = usernameInput.value || "Channel";
-	const eventName = eventInput.value || "Event";
-	updateEvents(events, eventName, channel);
-	localStorage.setItem(EVENT_STORE, JSON.stringify(events));
+	const channel = usernameInput.value || "N/A";
+	const eventName = eventInput.value || "N/A";
+	updateEvents(events, "Event", eventName, channel);
 	eventInput.value = "";
 	eventInput.focus();
 	rerender();
