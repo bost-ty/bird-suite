@@ -1,4 +1,4 @@
-# Twitcher Suite
+# Bird Suite
 
 The Twitch API is pretty fragmented. Libraries aren't really doing what they used to do, and they often aren't doing that well. No shade.
 
