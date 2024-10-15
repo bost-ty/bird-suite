@@ -2,13 +2,7 @@
 
 import { makeConfig, generateCsv, downloadCsv } from "./csv.js";
 import { renderEvents, renderURLSearchParamsAsUL, toggleVisibility } from "./render.js";
-import {
-	validateAuth,
-	fetchTwitch,
-	getChatterCount,
-	getViewerCount,
-	getUserId,
-} from "./twitch.js";
+import { validateAuth, getChatterCount, getViewerCount, getUserId } from "./twitch.js";
 
 const CLIENT_ID = "p1qg8d7u9wf5580xqwuu3ot0yk69nx";
 const REDIRECT_URI = "http://localhost:5500";
