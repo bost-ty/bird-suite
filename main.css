@@ -16,7 +16,12 @@ hgroup > p {
 	display: flex;
 	flex-flow: row wrap;
 	align-items: center;
-	gap: 0.5%;
+	gap: 0.5rem;
+	margin-inline: auto;
+}
+
+button {
+	margin-top: 1rem;
 }
 
 .mono {

@@ -48,16 +48,23 @@
 						<input type="text" name="chatters" id="chatters" readonly />
 					</label>
 				</div>
+				<div class="flex">
 				<label>
 					Output filename
 					<input type="text" name="eventsTitle" id="eventsTitle" />
 				</label>
 				<button id="downloadButton">Download event log as .csv</button>
+				</div>
 				<div class="divider"></div>
 			</section>
 			<section id="eventSection">
 				<h2>Event Log</h2>
-					<label style="padding: .5rem .8rem; background-color: var(--background-alt); border-radius: .2rem">
+					<label style="
+						padding: .5rem .8rem;
+						background-color: var(--background-alt);
+						border-radius: .2rem;
+						cursor: pointer;
+					">
 						Render stats updates as they happen?
 						<input type="checkbox" name="renderCounts" id="renderCounts">
 					</label>
