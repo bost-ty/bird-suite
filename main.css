@@ -9,7 +9,7 @@ hgroup > p {
   border-radius: 0.2rem;
   width: 100%;
   background-color: var(--background-alt);
-  margin: 2rem auto;
+  margin: 1rem auto;
 }
 
 .flex {
