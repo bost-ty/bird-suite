@@ -14,7 +14,7 @@ import {
 } from "./twitch.js";
 
 const CLIENT_ID = "p1qg8d7u9wf5580xqwuu3ot0yk69nx";
-const REDIRECT_URI = "http://localhost:5500";
+const REDIRECT_URI = "https://birdsuite.bostwick.dev";
 const EVENT_STORE = `events_${CLIENT_ID}`;
 const STATE_STORE = `oauth_state_${CLIENT_ID}`;
 const SCOPES = ["moderator:read:chatters"];

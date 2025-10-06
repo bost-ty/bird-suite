@@ -3,6 +3,8 @@
 The Twitch API is pretty fragmented.
 Libraries aren't really doing what they used to do.
 
+Bird Suite is a frontend-only, vanilla JavaScript utility for gathering basic Twitch analytics.
+
 ## Endpoints one might need
 
 1. Get Users (app access token OR user access token) -> get a user ID from a login name/display name.
