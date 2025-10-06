@@ -1,49 +1,55 @@
 hgroup > p {
-	font-size: 1.5em;
-	font-style: italic;
-	margin-top: 0;
+  font-size: 1.5em;
+  font-style: italic;
+  margin-top: 0;
 }
 
 .divider {
-	height: 0.2rem;
-	border-radius: 0.2rem;
-	width: 100%;
-	background-color: var(--background-alt);
-	margin: 2rem auto;
+  height: 0.2rem;
+  border-radius: 0.2rem;
+  width: 100%;
+  background-color: var(--background-alt);
+  margin: 2rem auto;
 }
 
 .flex {
-	display: flex;
-	flex-flow: row wrap;
-	align-items: center;
-	gap: 0.5rem;
-	margin-inline: auto;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-inline: auto;
 }
 
 button {
-	margin-top: 1rem;
+  margin-top: 1rem;
+}
+
+button:disabled {
+  &:active {
+    outline: 1px solid red;
+  }
 }
 
 .mono {
-	color: var(--code);
-	font-family: monospace;
+  color: var(--code);
+  font-family: monospace;
 }
 
 #eventOutput {
-	margin-top: 1rem;
-	border: 1px solid var(--code);
-	border-radius: 0.2rem;
-	max-height: 20rem;
-	overflow-y: auto;
+  margin-top: 1rem;
+  border: 1px solid var(--code);
+  border-radius: 0.2rem;
+  max-height: 20rem;
+  overflow-y: auto;
 }
 
 #eventOutput > * {
-	margin: 0;
-	padding: 0.3rem;
-	line-height: 1;
-	vertical-align: middle;
+  margin: 0;
+  padding: 0.3rem;
+  line-height: 1;
+  vertical-align: middle;
 }
 
 #eventOutput > *:nth-child(odd) {
-	background-color: var(--background-alt);
+  background-color: var(--background-alt);
 }
