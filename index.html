@@ -1,86 +1,85 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Bird Suite</title>
-		<link rel="stylesheet" href="water.css" />
-		<link rel="stylesheet" href="main.css" />
-	</head>
-	<body>
-		<header>
-			<hgroup>
-				<h1>Bird Suite</h1>
-				<p>Authorize, connect, and log</p>
-			</hgroup>
-		</header>
-		<div class="divider"></div>
-		<main>
-			<section>
-				<button id="ctrl-hide">Hide auth information</button>
-				<button id="ctrl-clear">Clear event/timestamp data</button>
-				<button id="ctrl-clear-channel">Clear channel connection</button>
-			</section>
-			<section id="authorizeSection">
-				<div id="authInfo"></div>
-				<div class="divider"></div>
-				<button id="authorizeButton">Authorize Bird Suite on Twitch</button>
-			</section>
-			<section id="callbackSection" class="mono"></section>
-			<div class="divider"></div>
-			<section id="controlsSection">
-				<div class="flex">
-					<label>
-						Target channel username
-						<input type="text" name="username" id="usernameInput" />
-					</label>
-					<button id="connectButton">Connect to target channel</button>
-				</div>
-			</section>
-			<section id="outputSection">
-				<div class="flex">
-					<label>
-						Viewers
-						<input type="text" name="viewers" id="viewers" readonly />
-					</label>
-					<label>
-						Chatters
-						<input type="text" name="chatters" id="chatters" readonly />
-					</label>
-				</div>
-				<div class="flex">
-				<label>
-					Output filename
-					<input type="text" name="eventsTitle" id="eventsTitle" />
-				</label>
-				<button id="downloadButton">Download event log as .csv</button>
-				</div>
-				<div class="divider"></div>
-			</section>
-			<section id="eventSection">
-				<h2>Event Log</h2>
-					<label style="
-						padding: .5rem .8rem;
-						background-color: var(--background-alt);
-						border-radius: .2rem;
-						cursor: pointer;
-					">
-						Render stats updates as they happen?
-						<input type="checkbox" name="renderCounts" id="renderCounts">
-					</label>
-				<div class="flex">
-					<label>
-						Event name
-						<input type="text" name="event" id="eventInput" />
-					</label>
-					<button id="markButton">Mark event at current time</button>
-				</div>
-				<div
-					id="eventOutput"
-					class="mono"
-				</div>
-			</section>
-		</main>
-		<script src="./src/main.js" type="module"></script>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bird Suite</title>
+    <link rel="stylesheet" href="water.css" />
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <header>
+      <hgroup>
+        <h1>Bird Suite</h1>
+        <p>Authorize, connect, and log</p>
+      </hgroup>
+    </header>
+    <div class="divider"></div>
+    <main>
+      <section>
+        <button id="ctrl-hide">Hide auth information</button>
+        <button id="ctrl-clear">Clear event/timestamp data</button>
+        <button id="ctrl-clear-channel">Clear channel connection</button>
+      </section>
+      <section id="authorizeSection">
+        <div id="authInfo"></div>
+        <div class="divider"></div>
+        <button id="authorizeButton">Authorize Bird Suite on Twitch</button>
+      </section>
+      <section id="callbackSection" class="mono"></section>
+      <div class="divider"></div>
+      <section id="controlsSection">
+        <div class="flex">
+          <label>
+            Target channel username
+            <input type="text" name="username" id="usernameInput" />
+          </label>
+          <button id="connectButton">Connect to target channel</button>
+        </div>
+      </section>
+      <section id="outputSection">
+        <div class="flex">
+          <label>
+            Viewers
+            <input type="text" name="viewers" id="viewers" readonly />
+          </label>
+          <label>
+            Chatters
+            <input type="text" name="chatters" id="chatters" readonly />
+          </label>
+        </div>
+        <div class="flex">
+          <label>
+            Output filename
+            <input type="text" name="eventsTitle" id="eventsTitle" />
+          </label>
+          <button id="downloadButton">Download event log as .csv</button>
+        </div>
+        <div class="divider"></div>
+      </section>
+      <section id="eventSection">
+        <h2>Event Log</h2>
+        <label
+          style="
+            padding: 0.5rem 0.8rem;
+            background-color: var(--background-alt);
+            border-radius: 0.2rem;
+            cursor: pointer;
+          "
+        >
+          Render stats updates as they happen?
+          <input type="checkbox" name="renderCounts" id="renderCounts" />
+        </label>
+        <div class="flex">
+          <label>
+            Event name
+            <input type="text" name="event" id="eventInput" />
+          </label>
+          <button id="markButton">Mark event at current time</button>
+        </div>
+        <div id="eventOutput" class="mono"></div>
+      </section>
+    </main>
+    <script src="./src/main.js" type="module"></script>
+  </body>
 </html>

@@ -87,9 +87,9 @@ authorizeButton?.addEventListener("click", () => {
   location.assign(url);
 });
 
-if (!document.location.hash)
+if (!document.location.hash) {
   throw new Error("Halting: no document.location.hash");
-
+}
 /* We have something in document.location.hash, let's look at it: */
 
 const sp = new URLSearchParams(document.location.hash);
