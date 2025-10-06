@@ -1,5 +1,5 @@
 hgroup > p {
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-style: italic;
   margin-top: 0;
 }
@@ -24,15 +24,9 @@ button {
   margin-top: 1rem;
 }
 
-button:disabled {
-  &:active {
-    outline: 1px solid red;
-  }
-}
-
 .mono {
   color: var(--code);
-  font-family: monospace;
+  font-family: ui-monospace, monospace;
 }
 
 #eventOutput {
